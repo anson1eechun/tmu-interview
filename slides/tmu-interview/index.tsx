@@ -11,6 +11,7 @@ import {
 import type { CSSProperties, ReactNode } from 'react';
 import awardCrossStrait from './assets/award-crossstrait.jpg';
 import awardNational from './assets/award-national.jpg';
+import clubTogether from './assets/club-together.jpg';
 import headshot from './assets/headshot.jpg';
 import rehabSeated from './assets/rehab-seated.jpg';
 import appPoster from './assets/zaoxingzhe-poster.jpg';
@@ -457,8 +458,8 @@ const About: Page = () => (
         <TimelineRow
           delay={400}
           when="114 學年度 · 大三"
-          title="GDG on Campus FCU 創社成員"
-          desc="擔任財務與副召集人，開始組隊做專題、參加競賽"
+          title="加入 GDG on Campus FCU"
+          desc="成為創社成員，在社團裡重新找回自信"
         />
       </div>
       <Rise delay={520} style={{ marginTop: 44, display: 'flex', alignItems: 'baseline', gap: 24 }}>
@@ -471,9 +472,110 @@ const About: Page = () => (
   </Frame>
 );
 
-// ─── 3. Home rehab platform ──────────────────────────────────────────────────
+// ─── 3. Competitions + club ──────────────────────────────────────────────────
 
-const Stat = ({ value, label, delay }: { value: string; label: string; delay: number }) => (
+const ColumnLabel = ({ children }: { children: ReactNode }) => (
+  <div style={{ fontFamily: MONO, fontSize: 22, color: 'var(--osd-accent)', letterSpacing: '0.16em', marginBottom: 18 }}>
+    {children}
+  </div>
+);
+
+const AwardCard = ({
+  src,
+  rank,
+  name,
+  desc,
+  delay,
+}: {
+  src: string;
+  rank: string;
+  name: string;
+  desc: string;
+  delay: number;
+}) => (
+  <Rise delay={delay} style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+    <img
+      src={src}
+      alt={name}
+      style={{ width: 250, height: 188, flex: 'none', objectFit: 'cover', borderRadius: 12, border: `1.5px solid ${line}` }}
+    />
+    <div>
+      <div style={{ fontSize: 44, fontWeight: 800, lineHeight: 1.2, color: amber }}>{rank}</div>
+      <div style={{ marginTop: 6, fontSize: 30, fontWeight: 700, lineHeight: 1.35 }}>{name}</div>
+      <div style={{ marginTop: 6, fontSize: 24, color: muted, lineHeight: 1.5 }}>{desc}</div>
+    </div>
+  </Rise>
+);
+
+const ClubPoint = ({ children }: { children: ReactNode }) => (
+  <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, fontSize: 28, lineHeight: 1.5 }}>
+    <span style={{ width: 10, height: 10, flex: 'none', borderRadius: 3, background: 'var(--osd-accent)', transform: 'translateY(-5px)' }} />
+    <span>{children}</span>
+  </div>
+);
+
+const Journey: Page = () => (
+  <Frame>
+    <Header
+      kicker="02 · 競賽與社團"
+      title="社團與競賽：和夥伴一起做出作品"
+      sub="學長的一句話：「不用很厲害才開始，要開始才能很厲害！」"
+    />
+    <div style={{ position: 'absolute', left: PAD, top: 340, width: 820 }}>
+      <Rise>
+        <ColumnLabel>競賽</ColumnLabel>
+      </Rise>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+        <AwardCard
+          delay={120}
+          src={awardNational}
+          rank="季軍"
+          name="全國電子設計創意競賽"
+          desc="第一次參賽 · 33 支入圍隊伍"
+        />
+        <AwardCard
+          delay={240}
+          src={awardCrossStrait}
+          rank="一等獎"
+          name="海峽兩岸青少年創客大賽"
+          desc="CareYou · 上海同濟大學總決賽"
+        />
+      </div>
+      <Rise delay={360} style={{ marginTop: 32, fontSize: 26, color: muted, lineHeight: 1.5 }}>
+        得獎後在新聞稿介紹社團，讓剛成立的社團被看見
+      </Rise>
+    </div>
+    <div style={{ position: 'absolute', left: 1020, top: 340, width: 780 }}>
+      <Rise delay={180}>
+        <ColumnLabel>社團</ColumnLabel>
+        <img
+          src={clubTogether}
+          alt="逢甲 GDG on Campus 社員於 DevFest 合影"
+          style={{
+            display: 'block',
+            width: 780,
+            height: 300,
+            objectFit: 'cover',
+            borderRadius: 'var(--osd-radius)',
+            border: `2px solid ${line}`,
+          }}
+        />
+      </Rise>
+      <Rise delay={300} style={{ marginTop: 24 }}>
+        <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.35 }}>GDG on Campus FCU 創社成員</div>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <ClubPoint>財務 · 兩次活動副召集人</ClubPoint>
+          <ClubPoint>長期擔任社課助教、參與試教回饋</ClubPoint>
+          <ClubPoint>上台分享：回收零件組電腦、跑本地模型</ClubPoint>
+        </div>
+      </Rise>
+    </div>
+  </Frame>
+);
+
+// ─── 4. Home rehab platform ──────────────────────────────────────────────────
+
+const Stat =({ value, label, delay }: { value: string; label: string; delay: number }) => (
   <Rise delay={delay}>
     <div style={{ fontFamily: MONO, fontSize: 56, fontWeight: 600, color: 'var(--osd-accent)', lineHeight: 1.1 }}>
       {value}
@@ -482,24 +584,18 @@ const Stat = ({ value, label, delay }: { value: string; label: string; delay: nu
   </Rise>
 );
 
-const Award = ({ src, rank, name, delay }: { src: string; rank: string; name: string; delay: number }) => (
-  <Rise delay={delay} style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
-    <img
-      src={src}
-      alt={name}
-      style={{ width: 110, height: 83, objectFit: 'cover', borderRadius: 10, border: `1.5px solid ${line}` }}
-    />
-    <div>
-      <div style={{ fontSize: 30, fontWeight: 800, color: amber, lineHeight: 1.3 }}>{rank}</div>
-      <div style={{ fontSize: 24, color: muted, lineHeight: 1.4 }}>{name}</div>
-    </div>
+const Generation = ({ no, name, desc, delay }: { no: string; name: string; desc: string; delay: number }) => (
+  <Rise delay={delay} style={{ display: 'flex', alignItems: 'baseline', gap: 16 }}>
+    <span style={{ fontFamily: MONO, fontSize: 22, color: 'var(--osd-accent)' }}>{no}</span>
+    <span style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.4, whiteSpace: 'nowrap' }}>{name}</span>
+    <span style={{ fontSize: 24, color: muted, lineHeight: 1.4, whiteSpace: 'nowrap' }}>{desc}</span>
   </Rise>
 );
 
 const Rehab: Page = () => (
   <Frame>
     <Header
-      kicker="02 · 代表作品"
+      kicker="03 · 代表作品"
       title="居家復健：一台平板，在家就能練"
       sub="我負責患者端 App、姿態辨識、小伴 AI 陪伴助手與國台客語語音"
     />
@@ -525,15 +621,21 @@ const Rehab: Page = () => (
         <Stat delay={380} value="< 0.5 s" label="從錯誤姿勢到語音糾正" />
       </div>
       <div style={{ height: 1, background: line, margin: '28px 0' }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <Award delay={480} src={awardNational} rank="季軍" name="全國電子設計創意競賽" />
-        <Award delay={560} src={awardCrossStrait} rank="一等獎" name="海峽兩岸青少年創客大賽" />
+      <Rise delay={440}>
+        <div style={{ fontFamily: MONO, fontSize: 22, color: dim, letterSpacing: '0.1em', marginBottom: 14 }}>
+          同一個題目，做了三代
+        </div>
+      </Rise>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Generation delay={500} no="01" name="電子設計競賽" desc="ML Kit 手機即時辨識" />
+        <Generation delay={560} no="02" name="CareYou" desc="加入本地 LLM 與國台客語語音" />
+        <Generation delay={620} no="03" name="大學專題「倍伴練」" desc="BlazePose · 本頁數據" />
       </div>
     </div>
   </Frame>
 );
 
-// ─── 4. Privacy + elderly-friendly design ───────────────────────────────────
+// ─── 5. Privacy + elderly-friendly design ───────────────────────────────────
 
 const FlowNode = ({ left, width = 300, tag, title }: { left: number; width?: number; tag: string; title: string }) => (
   <div
@@ -588,7 +690,7 @@ const Arrow = ({ x1, x2, y, color, dashed = false }: { x1: number; x2: number; y
 const Privacy: Page = () => (
   <Frame>
     <Header
-      kicker="02 · 代表作品"
+      kicker="03 · 代表作品"
       title="影像不離開裝置，只同步數據"
       sub="醫師與家屬看得到復健成果，看不到病人的畫面"
     />
@@ -645,7 +747,7 @@ const Privacy: Page = () => (
   </Frame>
 );
 
-// ─── 5. 造星者: the lesson ───────────────────────────────────────────────────
+// ─── 6. 造星者: the lesson ───────────────────────────────────────────────────
 
 const Point = ({ children, tone = 'accent' }: { children: ReactNode; tone?: 'accent' | 'amber' }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 18 }}>
@@ -668,7 +770,7 @@ const Point = ({ children, tone = 'accent' }: { children: ReactNode; tone?: 'acc
 const Lesson: Page = () => (
   <Frame>
     <Header
-      kicker="03 · 學到的一課"
+      kicker="04 · 學到的一課"
       title="做得完整，不等於證明有效"
       sub="造星者｜兒童專注力訓練 App · 2026 MAIC 行動應用創新賽作品"
     />
@@ -726,7 +828,7 @@ const Lesson: Page = () => (
   </Frame>
 );
 
-// ─── 6. Research plan ────────────────────────────────────────────────────────
+// ─── 7. Research plan ────────────────────────────────────────────────────────
 
 const N_FRAMES = 52; // 52 × 30 px leaves a right gutter for the τ label
 const TAU = 0.6;
@@ -821,7 +923,7 @@ const PlanCard = ({ no, title, desc }: { no: string; title: string; desc: string
 const Research: Page = () => (
   <Frame>
     <Header
-      kicker="04 · 研究計畫"
+      kicker="05 · 研究計畫"
       title="讓系統知道，自己什麼時候不可靠"
       sub="居家復健動作評估之感知可信度估計與邊緣端隱私保護"
     />
@@ -854,7 +956,7 @@ const Research: Page = () => (
   </Frame>
 );
 
-// ─── 7. Why TMU ──────────────────────────────────────────────────────────────
+// ─── 8. Why TMU ──────────────────────────────────────────────────────────────
 
 const Reason = ({ no, title, desc, delay }: { no: string; title: string; desc: string; delay: number }) => (
   <Rise delay={delay} style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
@@ -870,7 +972,7 @@ const Reason = ({ no, title, desc, delay }: { no: string; title: string; desc: s
 
 const WhyTmu: Page = () => (
   <Frame>
-    <Header kicker="05 · 為什麼是北醫" title="把問題帶到離臨床最近的地方" />
+    <Header kicker="06 · 為什麼是北醫" title="把問題帶到離臨床最近的地方" />
     <div style={{ position: 'absolute', left: PAD, top: 330, display: 'flex', flexDirection: 'column', gap: 64 }}>
       <Reason delay={120} no="01" title="補足我最缺的一塊" desc="醫學與臨床知識：動作怎樣才算到位，需要治療師的專業" />
       <Reason delay={240} no="02" title="離照護現場很近" desc="北醫附設醫院、萬芳醫院、雙和醫院，有真實的使用情境" />
@@ -885,7 +987,7 @@ const WhyTmu: Page = () => (
   </Frame>
 );
 
-// ─── 8. Thanks ───────────────────────────────────────────────────────────────
+// ─── 9. Thanks ───────────────────────────────────────────────────────────────
 
 const Thanks: Page = () => (
   <Frame footer={false}>
@@ -952,36 +1054,37 @@ export const meta: SlideMeta = {
 };
 
 export const notes: (string | undefined)[] = [
-  `（約 10 秒）
+  `（約 8 秒）
 各位教授好，我是逢甲大學資訊工程學系四年級的李鈞盛，研究興趣是邊緣 AI 和電腦視覺在居家照護上的應用。`,
-  `（約 25 秒）
-我大一在龍華科大資網系，上學期拿到書卷獎、班排第一。
-之後為了更完整的課程，轉學到逢甲資工。剛轉學時其實很迷茫，
-直到大三加入 Google 開發者學生社團、成為創社成員，開始和夥伴做專題、參加比賽，才慢慢找回自信。`,
-  `（約 30 秒）
-我們做的居家復健平台，讓患者只要一台平板就能在家復健。
+  `（約 15 秒）
+我大一在龍華科大資網系，上學期拿到書卷獎、班排第一，之後為了更完整的課程轉學到逢甲資工。
+剛轉學時其實很迷茫，直到大三加入社團，才慢慢找回方向。`,
+  `（約 35 秒）
+大三上，我成為逢甲 Google 開發者學生社團的創社成員，擔任財務，也當過兩次活動的副召集人，並長期擔任社課助教。社團剛成立，沒有前人經驗，流程都要從頭建立。
+我也是在社團裡和夥伴開始參加競賽：第一次參賽，就在全國電子設計創意競賽 33 支入圍隊伍中拿到季軍；
+接著帶著居家復健平台 CareYou 到上海同濟大學，拿到海峽兩岸青少年創客大賽一等獎。`,
+  `（約 35 秒）
+這兩個作品都是居家復健平台，後來延伸成我的大學專題「倍伴練」，讓患者只要一台平板就能在家復健。
 系統在裝置上用 BlazePose 擷取 33 個關鍵點，用向量夾角算關節角度，判斷動作有沒有到位並自動計次。
-在中階手機上實測，單幀推論 18 到 25 毫秒、30 FPS 以上，從錯誤姿勢到語音糾正不到 0.5 秒。
-同一個題目我們做了三代：電子設計創意競賽拿到季軍，CareYou 拿到海峽兩岸創客大賽一等獎，後來延伸成大學專題「倍伴練」。
+在中階手機上，單幀推論 18 到 25 毫秒、30 FPS 以上，從錯誤姿勢到語音糾正不到 0.5 秒。
 我負責患者端 App、姿態辨識、陪伴助手和語音整合。`,
+  `（約 15 秒）
+影像不離開裝置，只把角度和次數同步給醫師與家屬。
+考量高齡者，我們做了大字介面、國台客語語音，以及本地 LLM 陪伴助手「小伴」。`,
   `（約 20 秒）
-影像不離開裝置，只把角度和次數同步給醫師與家屬，醫師也能遠端調整復健處方。
-考量高齡者，我們做了高對比的大字介面、國台客語語音，以及本地 LLM 陪伴助手「小伴」。`,
-  `（約 25 秒）
-另一個作品是兒童專注力訓練 App「造星者」，用 iPad 前鏡頭判斷孩子有沒有在看螢幕。
-原型做得很完整，卻在只審企劃書的初賽落選，原因是我們沒有數據證明它有效。
-從那之後，我做任何東西都會先想好怎麼驗證，復健專題的量角器對照實驗就是這樣來的。`,
-  `（約 35 秒，按 → 依序出現三張卡片）
+另一個作品「造星者」是兒童專注力訓練 App，原型做得很完整，卻在只審企劃書的初賽落選，因為沒有數據證明它有效。
+從那之後，我做任何東西都先想好怎麼驗證，復健專題的量角器對照實驗就是這樣來的。`,
+  `（約 30 秒，按 → 依序出現三張卡片）
 做專題時，遇到遮擋、光線差或動作太快，關鍵點信心值會掉。
-我們用前後幀插補讓骨架不要跳，但系統其實不知道那幾幀是猜的，還是照樣計次、照樣糾正。在醫療情境，錯的糾正可能造成二次傷害。
+我們用插補讓骨架不要跳，但系統不知道那幾幀是猜的，還是照樣計次、照樣糾正，錯的糾正可能造成二次傷害。
 所以我的研究計畫是：
 【→】在手機上即時估計每一幀的可信度，
-【→】不可信時暫停計次、提示病人調整位置，而不是給錯的指令；
-【→】同時維持只上傳去識別化數據，讓醫師仍能掌握復健品質。`,
-  `（約 20 秒）
-我最缺的是醫學和臨床知識。北醫醫資所離臨床場域很近，也有醫療背景的同學。
+【→】不可信時暫停計次、提示病人調整位置；
+【→】同時只上傳去識別化數據，讓醫師仍能掌握復健品質。`,
+  `（約 15 秒）
+我最缺的是醫學和臨床知識。北醫離臨床場域很近，也有醫療背景的同學。
 我希望在這裡學會和醫療人員溝通，把這個問題做成真正能用在照護現場的研究。`,
   `謝謝教授。（停在這頁，等委員提問）`,
 ];
 
-export default [Cover, About, Rehab, Privacy, Lesson, Research, WhyTmu, Thanks] satisfies Page[];
+export default [Cover, About, Journey, Rehab, Privacy, Lesson, Research, WhyTmu, Thanks] satisfies Page[];
