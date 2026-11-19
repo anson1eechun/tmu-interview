@@ -36,7 +36,8 @@ const line = 'rgba(86, 212, 245, 0.28)';
 const panel = 'rgba(12, 22, 36, 0.78)';
 const amber = '#ffb454';
 const PAD = 120;
-const SITE = 'anson1eechun.github.io/tmu-interview';
+const SITE_URL = 'https://anson1eechun.github.io/tmu-interview/s/tmu-interview/';
+const SITE = 'anson1eechun.github.io/tmu-interview/s/tmu-interview';
 const VIDEO_URL = 'https://youtu.be/RtDM5NUFBYw';
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
@@ -51,7 +52,6 @@ const css = `
 @keyframes tmu-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes tmu-halo { 0%, 100% { opacity: 0.08; transform: scale(0.7); } 50% { opacity: 0.3; transform: scale(1.25); } }
 @keyframes tmu-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes tmu-flow { to { stroke-dashoffset: -28; } }
 @keyframes tmu-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 @media (prefers-reduced-motion: reduce) { .tmu-anim { animation: none !important; } }
 `;
@@ -474,9 +474,24 @@ const Cover: Page = () => (
         <Chip>居家照護</Chip>
       </Rise>
     </div>
-    <div style={{ position: 'absolute', left: PAD, bottom: 64, fontFamily: MONO, fontSize: 22, color: dim }}>
-      {SITE}
-    </div>
+    <Rise delay={480} style={{ position: 'absolute', left: PAD, bottom: 84, display: 'flex', alignItems: 'baseline', gap: 20 }}>
+      <span style={{ fontSize: 26, color: muted }}>線上簡報</span>
+      <a
+        href={SITE_URL}
+        target="_blank"
+        rel="noreferrer"
+        style={{
+          fontFamily: MONO,
+          fontSize: 28,
+          color: 'var(--osd-accent)',
+          textDecoration: 'underline',
+          textDecorationColor: line,
+          textUnderlineOffset: 8,
+        }}
+      >
+        {SITE}
+      </a>
+    </Rise>
     <div style={{ position: 'absolute', left: 1230, top: 110 }}>
       <Skeleton width={560} />
       <div
@@ -654,119 +669,7 @@ const Rehab: Page = () => (
   </Frame>
 );
 
-// ─── 4. Privacy + elderly-friendly design ───────────────────────────────────
-
-const FlowNode = ({ left, width = 300, tag, title }: { left: number; width?: number; tag: string; title: string }) => (
-  <div
-    style={{
-      position: 'absolute',
-      left,
-      top: 84,
-      width,
-      height: 160,
-      borderRadius: 'var(--osd-radius)',
-      background: panel,
-      border: `1.5px solid ${line}`,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 10,
-    }}
-  >
-    <div style={{ fontFamily: MONO, fontSize: 20, color: dim, letterSpacing: '0.12em' }}>{tag}</div>
-    <div style={{ fontSize: 36, fontWeight: 700, whiteSpace: 'nowrap' }}>{title}</div>
-  </div>
-);
-
-const Arrow = ({ x1, x2, y, color, dashed = false }: { x1: number; x2: number; y: number; color: string; dashed?: boolean }) => {
-  const live = useIsActivePage();
-  const dir = x2 > x1 ? 1 : -1;
-  const tip = x2;
-  return (
-    <g>
-      <line
-        className="tmu-anim"
-        x1={x1}
-        y1={y}
-        x2={tip - dir * 12}
-        y2={y}
-        style={{
-          stroke: color,
-          strokeWidth: 3,
-          strokeDasharray: dashed ? '10 4' : undefined,
-          animation: dashed && live ? 'tmu-flow 1.2s linear infinite' : undefined,
-        }}
-      />
-      <polygon
-        points={`${tip},${y} ${tip - dir * 16},${y - 8} ${tip - dir * 16},${y + 8}`}
-        style={{ fill: color }}
-      />
-    </g>
-  );
-};
-
-const Privacy: Page = () => (
-  <Frame>
-    <Header
-      kicker="02 · 代表作品"
-      title="影像不離開裝置，只同步數據"
-      sub="醫師與家屬看得到復健成果，看不到病人的畫面"
-    />
-    <Rise delay={100} style={{ position: 'absolute', left: PAD, top: 350, width: 1680, height: 330 }}>
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: 1060,
-          height: 330,
-          borderRadius: 20,
-          border: `2px dashed ${line}`,
-          background: 'rgba(86, 212, 245, 0.035)',
-        }}
-      />
-      <div style={{ position: 'absolute', left: 30, top: 24, fontFamily: MONO, fontSize: 22, color: 'var(--osd-accent)', letterSpacing: '0.1em' }}>
-        平板裝置內 · ON-DEVICE
-      </div>
-      <FlowNode left={40} tag="CAMERA" title="鏡頭影像" />
-      <FlowNode left={380} tag="BLAZEPOSE" title="33 個關鍵點" />
-      <FlowNode left={720} tag="VECTOR ANGLE" title="關節角度・計次" />
-      <div style={{ position: 'absolute', left: 40, top: 268, fontSize: 24, color: amber }}>
-        原始影像只在裝置上處理，不上傳
-      </div>
-      <FlowNode left={1300} width={380} tag="CLOUD · FIREBASE" title="醫師・家屬" />
-      <svg
-        width={1680}
-        height={330}
-        viewBox="0 0 1680 330"
-        style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible' }}
-        aria-hidden="true"
-      >
-        <Arrow x1={344} x2={376} y={164} color="rgba(86, 212, 245, 0.7)" />
-        <Arrow x1={684} x2={716} y={164} color="rgba(86, 212, 245, 0.7)" />
-        <Arrow x1={1024} x2={1296} y={134} color="#56d4f5" dashed />
-        <Arrow x1={1296} x2={1024} y={204} color={dim} dashed />
-      </svg>
-      <div style={{ position: 'absolute', left: 1024, width: 272, top: 90, textAlign: 'center', fontSize: 24, color: 'var(--osd-accent)' }}>
-        只同步角度與次數
-      </div>
-      <div style={{ position: 'absolute', left: 1024, width: 272, top: 214, textAlign: 'center', fontSize: 24, color: muted }}>
-        醫師遠端調整處方
-      </div>
-    </Rise>
-    <Rise delay={300} style={{ position: 'absolute', left: PAD, top: 740 }}>
-      <div style={{ fontFamily: MONO, fontSize: 24, color: dim, letterSpacing: '0.12em' }}>為高齡者設計</div>
-      <div style={{ display: 'flex', gap: 20, marginTop: 20 }}>
-        <Chip size={30}>高對比大字介面</Chip>
-        <Chip size={30}>國台客語語音提醒</Chip>
-        <Chip size={30}>本地 LLM 陪伴助手「小伴」</Chip>
-      </div>
-    </Rise>
-  </Frame>
-);
-
-// ─── 5. 造星者: the lesson ───────────────────────────────────────────────────
+// ─── 4. 造星者: the lesson ───────────────────────────────────────────────────
 
 const Point = ({ children, tone = 'accent' }: { children: ReactNode; tone?: 'accent' | 'amber' }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 18 }}>
@@ -843,7 +746,7 @@ const Lesson: Page = () => (
   </Frame>
 );
 
-// ─── 6. Why TMU ──────────────────────────────────────────────────────────────
+// ─── 5. Why TMU ──────────────────────────────────────────────────────────────
 
 const Reason = ({ no, title, desc, delay }: { no: string; title: string; desc: string; delay: number }) => (
   <Rise delay={delay} style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
@@ -874,7 +777,7 @@ const WhyTmu: Page = () => (
   </Frame>
 );
 
-// ─── 7. Thanks ───────────────────────────────────────────────────────────────
+// ─── 6. Thanks ───────────────────────────────────────────────────────────────
 
 const Thanks: Page = () => (
   <Frame footer={false}>
@@ -952,9 +855,6 @@ export const notes: (string | undefined)[] = [
 系統在裝置上用 BlazePose 擷取 33 個關鍵點，用向量夾角算關節角度，判斷動作有沒有到位並自動計次。
 在中階手機上，單幀推論 18 到 25 毫秒、30 FPS 以上，從錯誤姿勢到語音糾正不到 0.5 秒。
 我負責患者端 App、姿態辨識、陪伴助手和語音整合。`,
-  `（約 15 秒）
-影像不離開裝置，只把角度和次數同步給醫師與家屬。
-考量高齡者，我們做了大字介面、國台客語語音，以及本地 LLM 陪伴助手「小伴」。`,
   `（約 20 秒；影片靜音自動播放，有聲版 54 秒）
 另一個作品「造星者」是兒童專注力訓練 App，原型做得很完整，卻在只審企劃書的初賽落選，因為沒有數據證明它有效。
 從那之後，我做任何東西都先想好怎麼驗證，復健專題的量角器對照實驗就是這樣來的。`,
@@ -964,4 +864,4 @@ export const notes: (string | undefined)[] = [
   `謝謝教授。（停在這頁，等委員提問）`,
 ];
 
-export default [Cover, Journey, Rehab, Privacy, Lesson, WhyTmu, Thanks] satisfies Page[];
+export default [Cover, Journey, Rehab, Lesson, WhyTmu, Thanks] satisfies Page[];
