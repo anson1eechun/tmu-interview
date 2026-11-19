@@ -3,8 +3,6 @@ import {
   type Page,
   type SlideMeta,
   type SlideTransition,
-  Step,
-  Steps,
   useIsActivePage,
   useSlidePageNumber,
 } from '@open-slide/core';
@@ -12,7 +10,6 @@ import { type CSSProperties, type ReactNode, useRef, useState } from 'react';
 import awardCrossStrait from './assets/award-crossstrait.jpg';
 import awardNational from './assets/award-national.jpg';
 import clubTogether from './assets/club-together.jpg';
-import headshot from './assets/headshot.jpg';
 import plusrepPoster from './assets/plusrep-poster.jpg';
 import appPoster from './assets/zaoxingzhe-poster.jpg';
 import appQr from './assets/zaoxingzhe-qr.png';
@@ -55,7 +52,6 @@ const css = `
 @keyframes tmu-halo { 0%, 100% { opacity: 0.08; transform: scale(0.7); } 50% { opacity: 0.3; transform: scale(1.25); } }
 @keyframes tmu-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes tmu-flow { to { stroke-dashoffset: -28; } }
-@keyframes tmu-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 @keyframes tmu-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 @media (prefers-reduced-motion: reduce) { .tmu-anim { animation: none !important; } }
 `;
@@ -499,101 +495,7 @@ const Cover: Page = () => (
   </Frame>
 );
 
-// ─── 2. About ────────────────────────────────────────────────────────────────
-
-const TimelineRow = ({
-  when,
-  title,
-  desc,
-  delay,
-}: {
-  when: string;
-  title: string;
-  desc: string;
-  delay: number;
-}) => (
-  <Rise delay={delay} style={{ position: 'relative', paddingLeft: 64 }}>
-    <span
-      style={{
-        position: 'absolute',
-        left: 0,
-        top: 4,
-        width: 22,
-        height: 22,
-        borderRadius: '50%',
-        border: '3px solid var(--osd-accent)',
-        background: 'var(--osd-bg)',
-        boxShadow: '0 0 0 6px rgba(86, 212, 245, 0.12)',
-        boxSizing: 'border-box',
-      }}
-    />
-    <div style={{ fontFamily: MONO, fontSize: 22, color: 'var(--osd-accent)', letterSpacing: '0.1em' }}>
-      {when}
-    </div>
-    <div style={{ marginTop: 6, fontSize: 40, fontWeight: 700, lineHeight: 1.3 }}>{title}</div>
-    <div style={{ marginTop: 6, fontSize: 30, color: muted, lineHeight: 1.5 }}>{desc}</div>
-  </Rise>
-);
-
-const About: Page = () => (
-  <Frame>
-    <Header kicker="01 · 關於我" title="從轉學的迷茫，到找到方向" />
-    <Rise delay={80} style={{ position: 'absolute', left: PAD, top: 330 }}>
-      <img
-        src={headshot}
-        alt="李鈞盛"
-        style={{
-          display: 'block',
-          width: 380,
-          height: 514,
-          objectFit: 'cover',
-          borderRadius: 'var(--osd-radius)',
-          border: `2px solid ${line}`,
-        }}
-      />
-    </Rise>
-    <div style={{ position: 'absolute', left: 600, right: PAD, top: 330 }}>
-      <div
-        style={{
-          position: 'absolute',
-          left: 10,
-          top: 20,
-          height: 360,
-          width: 2,
-          background: `linear-gradient(${line}, rgba(86, 212, 245, 0.06))`,
-        }}
-      />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-        <TimelineRow
-          delay={160}
-          when="112 學年度 · 大一"
-          title="龍華科技大學 資訊網路工程系"
-          desc="大一上書卷獎：班排 1/55、系排 2/107"
-        />
-        <TimelineRow
-          delay={280}
-          when="113 學年度 · 大二"
-          title="轉學 逢甲大學 資訊工程學系"
-          desc="想要更完整的課程，卻一度對未來很迷茫"
-        />
-        <TimelineRow
-          delay={400}
-          when="114 學年度 · 大三"
-          title="加入 GDG on Campus FCU"
-          desc="成為創社成員，在社團裡重新找回自信"
-        />
-      </div>
-      <Rise delay={520} style={{ marginTop: 44, display: 'flex', alignItems: 'baseline', gap: 24 }}>
-        <span style={{ fontFamily: MONO, fontSize: 22, color: dim, letterSpacing: '0.1em' }}>研究興趣</span>
-        <span style={{ fontSize: 34, fontWeight: 700, color: 'var(--osd-accent)' }}>
-          邊緣 AI × 電腦視覺 × 居家照護
-        </span>
-      </Rise>
-    </div>
-  </Frame>
-);
-
-// ─── 3. Competitions + club ──────────────────────────────────────────────────
+// ─── 2. Competitions + club ──────────────────────────────────────────────────
 
 const ColumnLabel = ({ children }: { children: ReactNode }) => (
   <div style={{ fontFamily: MONO, fontSize: 22, color: 'var(--osd-accent)', letterSpacing: '0.16em', marginBottom: 18 }}>
@@ -638,7 +540,7 @@ const ClubPoint = ({ children }: { children: ReactNode }) => (
 const Journey: Page = () => (
   <Frame>
     <Header
-      kicker="02 · 競賽與社團"
+      kicker="01 · 競賽與社團"
       title="社團與競賽：和夥伴一起做出作品"
       sub="學長的一句話：「不用很厲害才開始，要開始才能很厲害！」"
     />
@@ -694,7 +596,7 @@ const Journey: Page = () => (
   </Frame>
 );
 
-// ─── 4. Home rehab platform ──────────────────────────────────────────────────
+// ─── 3. Home rehab platform ──────────────────────────────────────────────────
 
 const Stat =({ value, label, delay }: { value: string; label: string; delay: number }) => (
   <Rise delay={delay}>
@@ -716,7 +618,7 @@ const Generation = ({ no, name, desc, delay }: { no: string; name: string; desc:
 const Rehab: Page = () => (
   <Frame>
     <Header
-      kicker="03 · 代表作品"
+      kicker="02 · 代表作品"
       title="居家復健：一台平板，在家就能練"
       sub="我負責患者端 App、姿態辨識、小伴 AI 陪伴助手與國台客語語音"
     />
@@ -752,7 +654,7 @@ const Rehab: Page = () => (
   </Frame>
 );
 
-// ─── 5. Privacy + elderly-friendly design ───────────────────────────────────
+// ─── 4. Privacy + elderly-friendly design ───────────────────────────────────
 
 const FlowNode = ({ left, width = 300, tag, title }: { left: number; width?: number; tag: string; title: string }) => (
   <div
@@ -807,7 +709,7 @@ const Arrow = ({ x1, x2, y, color, dashed = false }: { x1: number; x2: number; y
 const Privacy: Page = () => (
   <Frame>
     <Header
-      kicker="03 · 代表作品"
+      kicker="02 · 代表作品"
       title="影像不離開裝置，只同步數據"
       sub="醫師與家屬看得到復健成果，看不到病人的畫面"
     />
@@ -864,7 +766,7 @@ const Privacy: Page = () => (
   </Frame>
 );
 
-// ─── 6. 造星者: the lesson ───────────────────────────────────────────────────
+// ─── 5. 造星者: the lesson ───────────────────────────────────────────────────
 
 const Point = ({ children, tone = 'accent' }: { children: ReactNode; tone?: 'accent' | 'amber' }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 18 }}>
@@ -887,7 +789,7 @@ const Point = ({ children, tone = 'accent' }: { children: ReactNode; tone?: 'acc
 const Lesson: Page = () => (
   <Frame>
     <Header
-      kicker="04 · 學到的一課"
+      kicker="03 · 學到的一課"
       title="做得完整，不等於證明有效"
       sub="造星者｜兒童專注力訓練 App · 2026 MAIC 行動應用創新賽作品"
     />
@@ -941,135 +843,7 @@ const Lesson: Page = () => (
   </Frame>
 );
 
-// ─── 7. Research plan ────────────────────────────────────────────────────────
-
-const N_FRAMES = 52; // 52 × 30 px leaves a right gutter for the τ label
-const TAU = 0.6;
-const BAR_H = 220;
-const PITCH = 30;
-const confidence = (i: number) => {
-  const base = 0.84 + 0.05 * Math.sin(i * 0.9) + 0.03 * Math.sin(i * 2.3 + 1);
-  const dip = i >= 23 && i <= 36 ? Math.sin((Math.PI * (i - 23)) / 13) : 0;
-  return Math.max(0.12, base - 0.62 * dip);
-};
-const FRAMES = Array.from({ length: N_FRAMES }, (_, i) => confidence(i));
-const LOW = FRAMES.map((v, i) => (v < TAU ? i : -1)).filter((i) => i >= 0);
-const LOW_FIRST = LOW[0];
-const LOW_LAST = LOW[LOW.length - 1];
-const LOW_MID = ((LOW_FIRST + LOW_LAST + 1) / 2) * PITCH - 6;
-
-const ConfidenceChart = () => {
-  const live = useIsActivePage();
-  const top = 50;
-  return (
-    <svg width={1680} height={330} viewBox="0 0 1680 330" style={{ display: 'block', overflow: 'visible' }} aria-hidden="true">
-      <rect
-        x={LOW_FIRST * PITCH - 6}
-        y={top}
-        width={(LOW_LAST - LOW_FIRST + 1) * PITCH}
-        height={BAR_H}
-        rx={8}
-        style={{ fill: amber, opacity: 0.09 }}
-      />
-      {FRAMES.map((v, i) => (
-        <rect
-          key={`f${i}`}
-          className="tmu-anim"
-          x={i * PITCH}
-          y={top + BAR_H * (1 - v)}
-          width={18}
-          height={BAR_H * v}
-          rx={3}
-          style={{
-            fill: v < TAU ? amber : 'var(--osd-accent)',
-            opacity: v < TAU ? 0.95 : 0.62,
-            transformBox: 'fill-box',
-            transformOrigin: 'bottom',
-            animation: live ? `tmu-grow 600ms ${EASE} ${200 + i * 12}ms both` : undefined,
-          }}
-        />
-      ))}
-      <line x1={-6} y1={top + BAR_H} x2={1680} y2={top + BAR_H} style={{ stroke: line, strokeWidth: 2 }} />
-      <line
-        x1={-6}
-        y1={top + BAR_H * (1 - TAU)}
-        x2={N_FRAMES * PITCH}
-        y2={top + BAR_H * (1 - TAU)}
-        style={{ stroke: muted, strokeWidth: 2, strokeDasharray: '8 6', opacity: 0.7 }}
-      />
-      <text x={0} y={24} style={{ fill: dim, fontFamily: MONO, fontSize: 22, letterSpacing: '0.08em' }}>
-        每幀可信度
-      </text>
-      <text x={1680} y={top + BAR_H * (1 - TAU) + 8} textAnchor="end" style={{ fill: muted, fontFamily: MONO, fontSize: 22 }}>
-        門檻 τ
-      </text>
-      <text x={LOW_MID} y={30} textAnchor="middle" style={{ fill: amber, fontFamily: 'var(--osd-font-body)', fontSize: 26, fontWeight: 700 }}>
-        遮擋・光線差・動作太快
-      </text>
-      <text x={LOW_MID} y={top + BAR_H + 44} textAnchor="middle" style={{ fill: amber, fontFamily: 'var(--osd-font-body)', fontSize: 26 }}>
-        這幾幀是插補猜的，系統卻照樣計次、照樣糾正
-      </text>
-      <text x={1680} y={top + BAR_H + 44} textAnchor="end" style={{ fill: dim, fontFamily: MONO, fontSize: 22 }}>
-        時間（幀）→
-      </text>
-    </svg>
-  );
-};
-
-const PlanCard = ({ no, title, desc }: { no: string; title: string; desc: string }) => (
-  <div
-    style={{
-      height: '100%',
-      boxSizing: 'border-box',
-      padding: '26px 30px',
-      borderRadius: 'var(--osd-radius)',
-      background: panel,
-      border: `1.5px solid ${line}`,
-    }}
-  >
-    <div style={{ fontFamily: MONO, fontSize: 24, color: 'var(--osd-accent)', letterSpacing: '0.12em' }}>{no}</div>
-    <div style={{ marginTop: 10, fontSize: 36, fontWeight: 700, lineHeight: 1.3 }}>{title}</div>
-    <div style={{ marginTop: 10, fontSize: 26, color: muted, lineHeight: 1.5 }}>{desc}</div>
-  </div>
-);
-
-const Research: Page = () => (
-  <Frame>
-    <Header
-      kicker="05 · 研究計畫"
-      title="讓系統知道，自己什麼時候不可靠"
-      sub="居家復健動作評估之感知可信度估計與邊緣端隱私保護"
-    />
-    <Rise delay={80} style={{ position: 'absolute', left: PAD, top: 340 }}>
-      <ConfidenceChart />
-    </Rise>
-    <div
-      style={{
-        position: 'absolute',
-        left: PAD,
-        right: PAD,
-        top: 700,
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: 36,
-      }}
-    >
-      <Steps>
-        <Step duration={240}>
-          <PlanCard no="01" title="每幀估計可信度" desc="關節信心值 ＋ 動作的時間連續性" />
-        </Step>
-        <Step duration={240}>
-          <PlanCard no="02" title="不可信就先暫停" desc="暫停計次、提示調整位置，不給錯的指令" />
-        </Step>
-        <Step duration={240}>
-          <PlanCard no="03" title="只上傳去識別化數據" desc="醫師仍能掌握復健品質" />
-        </Step>
-      </Steps>
-    </div>
-  </Frame>
-);
-
-// ─── 8. Why TMU ──────────────────────────────────────────────────────────────
+// ─── 6. Why TMU ──────────────────────────────────────────────────────────────
 
 const Reason = ({ no, title, desc, delay }: { no: string; title: string; desc: string; delay: number }) => (
   <Rise delay={delay} style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
@@ -1085,7 +859,7 @@ const Reason = ({ no, title, desc, delay }: { no: string; title: string; desc: s
 
 const WhyTmu: Page = () => (
   <Frame>
-    <Header kicker="06 · 為什麼是北醫" title="把問題帶到離臨床最近的地方" />
+    <Header kicker="04 · 為什麼是北醫" title="把問題帶到離臨床最近的地方" />
     <div style={{ position: 'absolute', left: PAD, top: 330, display: 'flex', flexDirection: 'column', gap: 64 }}>
       <Reason delay={120} no="01" title="補足我最缺的一塊" desc="醫學與臨床知識：動作怎樣才算到位，需要治療師的專業" />
       <Reason delay={240} no="02" title="離照護現場很近" desc="北醫附設醫院、萬芳醫院、雙和醫院，有真實的使用情境" />
@@ -1100,7 +874,7 @@ const WhyTmu: Page = () => (
   </Frame>
 );
 
-// ─── 9. Thanks ───────────────────────────────────────────────────────────────
+// ─── 7. Thanks ───────────────────────────────────────────────────────────────
 
 const Thanks: Page = () => (
   <Frame footer={false}>
@@ -1169,9 +943,6 @@ export const meta: SlideMeta = {
 export const notes: (string | undefined)[] = [
   `（約 8 秒）
 各位教授好，我是逢甲大學資訊工程學系四年級的李鈞盛，研究興趣是邊緣 AI 和電腦視覺在居家照護上的應用。`,
-  `（約 15 秒）
-我大一在龍華科大資網系，上學期拿到書卷獎、班排第一，之後為了更完整的課程轉學到逢甲資工。
-剛轉學時其實很迷茫，直到大三加入社團，才慢慢找回方向。`,
   `（約 35 秒）
 大三上，我成為逢甲 Google 開發者學生社團的創社成員，擔任財務，也當過兩次活動的副召集人，並長期擔任社課助教。社團剛成立，沒有前人經驗，流程都要從頭建立。
 我也是在社團裡和夥伴開始參加競賽：第一次參賽，就在全國電子設計創意競賽 33 支入圍隊伍中拿到季軍；
@@ -1187,17 +958,10 @@ export const notes: (string | undefined)[] = [
   `（約 20 秒；影片靜音自動播放，有聲版 54 秒）
 另一個作品「造星者」是兒童專注力訓練 App，原型做得很完整，卻在只審企劃書的初賽落選，因為沒有數據證明它有效。
 從那之後，我做任何東西都先想好怎麼驗證，復健專題的量角器對照實驗就是這樣來的。`,
-  `（約 30 秒，按 → 依序出現三張卡片）
-做專題時，遇到遮擋、光線差或動作太快，關鍵點信心值會掉。
-我們用插補讓骨架不要跳，但系統不知道那幾幀是猜的，還是照樣計次、照樣糾正，錯的糾正可能造成二次傷害。
-所以我的研究計畫是：
-【→】在手機上即時估計每一幀的可信度，
-【→】不可信時暫停計次、提示病人調整位置；
-【→】同時只上傳去識別化數據，讓醫師仍能掌握復健品質。`,
   `（約 15 秒）
 我最缺的是醫學和臨床知識。北醫離臨床場域很近，也有醫療背景的同學。
-我希望在這裡學會和醫療人員溝通，把這個問題做成真正能用在照護現場的研究。`,
+我希望在這裡學會和醫療人員溝通，讓居家復健系統能在照護現場被驗證、真正用得上。`,
   `謝謝教授。（停在這頁，等委員提問）`,
 ];
 
-export default [Cover, About, Journey, Rehab, Privacy, Lesson, Research, WhyTmu, Thanks] satisfies Page[];
+export default [Cover, Journey, Rehab, Privacy, Lesson, WhyTmu, Thanks] satisfies Page[];
