@@ -8,14 +8,17 @@ import {
   useIsActivePage,
   useSlidePageNumber,
 } from '@open-slide/core';
-import type { CSSProperties, ReactNode } from 'react';
+import { type CSSProperties, type ReactNode, useRef, useState } from 'react';
 import awardCrossStrait from './assets/award-crossstrait.jpg';
 import awardNational from './assets/award-national.jpg';
 import clubTogether from './assets/club-together.jpg';
 import headshot from './assets/headshot.jpg';
-import rehabSeated from './assets/rehab-seated.jpg';
+import plusrepPoster from './assets/plusrep-poster.jpg';
 import appPoster from './assets/zaoxingzhe-poster.jpg';
 import appQr from './assets/zaoxingzhe-qr.png';
+
+const plusrepVideo = new URL('./assets/plusrep.mp4', import.meta.url).href;
+const appVideo = new URL('./assets/zaoxingzhe.mp4', import.meta.url).href;
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 
@@ -53,6 +56,7 @@ const css = `
 @keyframes tmu-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes tmu-flow { to { stroke-dashoffset: -28; } }
 @keyframes tmu-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes tmu-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 @media (prefers-reduced-motion: reduce) { .tmu-anim { animation: none !important; } }
 `;
 if (typeof document !== 'undefined') {
@@ -194,23 +198,140 @@ const Chip = ({ children, size = 26 }: { children: ReactNode; size?: number }) =
   </span>
 );
 
-const ImageTag = ({ children }: { children: ReactNode }) => (
-  <div
+// ─── Video frame (倍伴練 + 造星者) ──────────────────────────────────────────
+// The live page autoplays muted and loops; thumbnails, the overview grid and
+// print show the poster. Both controls are <button>s, so the player's
+// click-to-advance ignores them.
+
+const VideoButton = ({ on, onClick, children }: { on: boolean; onClick: () => void; children: ReactNode }) => (
+  <button
+    type="button"
+    onClick={onClick}
     style={{
-      position: 'absolute',
-      left: 20,
-      bottom: 20,
-      padding: '8px 14px',
-      borderRadius: 8,
+      padding: '6px 16px',
+      borderRadius: 999,
+      border: `1.5px solid ${on ? 'var(--osd-accent)' : line}`,
       background: 'rgba(6, 10, 18, 0.82)',
-      fontFamily: MONO,
+      color: on ? 'var(--osd-accent)' : 'var(--osd-text)',
+      fontFamily: 'var(--osd-font-body)',
       fontSize: 20,
-      color: muted,
+      cursor: 'pointer',
     }}
   >
     {children}
-  </div>
+  </button>
 );
+
+const VideoFrame = ({
+  src,
+  poster,
+  alt,
+  label,
+  width,
+  height,
+}: {
+  src: string;
+  poster: string;
+  alt: string;
+  label: string;
+  width: number;
+  height: number;
+}) => {
+  const live = useIsActivePage();
+  const ref = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  // Turning sound on restarts the video so the committee hears it from the top.
+  const toggleSound = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (muted) {
+      v.currentTime = 0;
+      v.muted = false;
+      void v.play();
+    } else {
+      v.muted = true;
+    }
+    setMuted(!muted);
+  };
+  // Native controls only while the video itself is fullscreen; if the browser
+  // refuses fullscreen, the frame stays as it was.
+  const enlarge = () => {
+    const v = ref.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    if (!v) return;
+    if (!v.requestFullscreen) {
+      v.webkitEnterFullscreen?.();
+      return;
+    }
+    const onChange = () => {
+      const on = document.fullscreenElement === v;
+      v.controls = on;
+      if (!on) document.removeEventListener('fullscreenchange', onChange);
+    };
+    document.addEventListener('fullscreenchange', onChange);
+    v.requestFullscreen().catch(() => document.removeEventListener('fullscreenchange', onChange));
+  };
+  const fill: CSSProperties = { width: '100%', height: '100%', objectFit: 'cover', display: 'block' };
+  return (
+    <div
+      style={{
+        position: 'relative',
+        boxSizing: 'border-box',
+        width,
+        height,
+        borderRadius: 'var(--osd-radius)',
+        border: `2px solid ${line}`,
+        background: '#000',
+        overflow: 'hidden',
+        boxShadow: '0 32px 80px rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      {live ? (
+        <video ref={ref} src={src} poster={poster} autoPlay muted={muted} loop playsInline style={fill} />
+      ) : (
+        <img src={poster} alt={alt} style={fill} />
+      )}
+      <span
+        style={{
+          position: 'absolute',
+          left: 16,
+          top: 14,
+          padding: '4px 12px',
+          borderRadius: 8,
+          background: 'rgba(6, 10, 18, 0.8)',
+          fontFamily: MONO,
+          fontSize: 20,
+          color: 'var(--osd-accent)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+        }}
+      >
+        <span
+          className="tmu-anim"
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            background: '#ff6b6b',
+            display: 'inline-block',
+            animation: live ? 'tmu-blink 1.4s ease-in-out infinite' : undefined,
+          }}
+        />
+        {label}
+      </span>
+      {live ? (
+        <div style={{ position: 'absolute', right: 16, bottom: 14, display: 'flex', gap: 10 }}>
+          <VideoButton on={!muted} onClick={toggleSound}>
+            {muted ? '▶ 有聲播放' : '■ 靜音'}
+          </VideoButton>
+          <VideoButton on={false} onClick={enlarge}>
+            ⛶ 放大
+          </VideoButton>
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 // ─── BlazePose skeleton (33 keypoints, T-stretch, front view) ───────────────
 // Index order follows BlazePose: 11 = left shoulder (viewer's right), etc.
@@ -600,19 +721,15 @@ const Rehab: Page = () => (
       sub="我負責患者端 App、姿態辨識、小伴 AI 陪伴助手與國台客語語音"
     />
     <Rise delay={80} style={{ position: 'absolute', left: PAD, top: 340, width: 940 }}>
-      <img
-        src={rehabSeated}
-        alt="倍伴練實機畫面：坐姿膝關節伸展，螢幕顯示骨架與關節角度"
-        style={{
-          display: 'block',
-          width: 940,
-          height: 566,
-          objectFit: 'cover',
-          borderRadius: 'var(--osd-radius)',
-          border: `2px solid ${line}`,
-        }}
+      <VideoFrame
+        src={plusrepVideo}
+        poster={plusrepPoster}
+        alt="倍伴練 PlusRep 介紹影片"
+        label="倍伴練 PlusRep · 介紹影片"
+        width={940}
+        height={529}
       />
-      <div style={{ marginTop: 14, fontFamily: MONO, fontSize: 20, color: dim }}>大學專題「倍伴練」· 實機畫面</div>
+      <div style={{ marginTop: 14, fontFamily: MONO, fontSize: 20, color: dim }}>大學專題「倍伴練」· 1 分 14 秒</div>
     </Rise>
     <div style={{ position: 'absolute', left: 1130, top: 340, width: 670 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -774,20 +891,16 @@ const Lesson: Page = () => (
       title="做得完整，不等於證明有效"
       sub="造星者｜兒童專注力訓練 App · 2026 MAIC 行動應用創新賽作品"
     />
-    <Rise delay={80} style={{ position: 'absolute', left: PAD, top: 340, width: 940, height: 529 }}>
-      <img
-        src={appPoster}
-        alt="造星者視線追蹤技術示意：臉部追蹤、視線投影、五點校準"
-        style={{
-          display: 'block',
-          width: 940,
-          height: 529,
-          objectFit: 'cover',
-          borderRadius: 'var(--osd-radius)',
-          border: `2px solid ${line}`,
-        }}
+    <Rise delay={80} style={{ position: 'absolute', left: PAD, top: 340, width: 940 }}>
+      <VideoFrame
+        src={appVideo}
+        poster={appPoster}
+        alt="造星者介紹影片：iPad 前鏡頭視線追蹤、視線投影、五點校準"
+        label="造星者 · 介紹影片"
+        width={940}
+        height={529}
       />
-      <ImageTag>iPad 前鏡頭視線追蹤 · 技術示意</ImageTag>
+      <div style={{ marginTop: 14, fontFamily: MONO, fontSize: 20, color: dim }}>2026 MAIC 參賽作品 · 54 秒</div>
     </Rise>
     <div style={{ position: 'absolute', left: 1130, top: 340, width: 670 }}>
       <Rise delay={180} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -1063,7 +1176,7 @@ export const notes: (string | undefined)[] = [
 大三上，我成為逢甲 Google 開發者學生社團的創社成員，擔任財務，也當過兩次活動的副召集人，並長期擔任社課助教。社團剛成立，沒有前人經驗，流程都要從頭建立。
 我也是在社團裡和夥伴開始參加競賽：第一次參賽，就在全國電子設計創意競賽 33 支入圍隊伍中拿到季軍；
 接著帶著居家復健平台 CareYou 到上海同濟大學，拿到海峽兩岸青少年創客大賽一等獎。`,
-  `（約 35 秒）
+  `（約 35 秒；影片會靜音自動播放，委員想看再按「有聲播放」或「放大」，看完再接著講）
 這兩個作品都是居家復健平台，後來延伸成我的大學專題「倍伴練」，讓患者只要一台平板就能在家復健。
 系統在裝置上用 BlazePose 擷取 33 個關鍵點，用向量夾角算關節角度，判斷動作有沒有到位並自動計次。
 在中階手機上，單幀推論 18 到 25 毫秒、30 FPS 以上，從錯誤姿勢到語音糾正不到 0.5 秒。
@@ -1071,7 +1184,7 @@ export const notes: (string | undefined)[] = [
   `（約 15 秒）
 影像不離開裝置，只把角度和次數同步給醫師與家屬。
 考量高齡者，我們做了大字介面、國台客語語音，以及本地 LLM 陪伴助手「小伴」。`,
-  `（約 20 秒）
+  `（約 20 秒；影片靜音自動播放，有聲版 54 秒）
 另一個作品「造星者」是兒童專注力訓練 App，原型做得很完整，卻在只審企劃書的初賽落選，因為沒有數據證明它有效。
 從那之後，我做任何東西都先想好怎麼驗證，復健專題的量角器對照實驗就是這樣來的。`,
   `（約 30 秒，按 → 依序出現三張卡片）
